@@ -42,7 +42,7 @@ async def chat(request: ChatRequest):
     logger.info(f"Received message: {request.message}")
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(request.message)
+        response = model.generate_content(request.message, )
         logger.info(f"Generated response: {response.text}")
         return {"response": response.text}
     except Exception as e:
