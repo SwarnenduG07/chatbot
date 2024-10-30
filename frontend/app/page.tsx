@@ -46,26 +46,25 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="w-full max-w-md space-y-8">
-        {response && (
-          <div className="rounded-lg bg-gray-100 p-4">
-            <p className="whitespace-pre-wrap">{response}</p>
-          </div>
-        )}
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900">AI Text Generator</h1>
+          <p className="mt-2 text-gray-600">Enter your prompt below to generate text</p>
+        </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
+                  <FormLabel className="text-lg font-medium text-gray-700">Your Prompt</FormLabel>
                   <FormControl>
-                    <input
-                      placeholder="Type your message..."
-                      className="w-full rounded-md border p-2"
+                    <textarea
+                      placeholder="Enter your prompt here... (e.g., 'Write a story about...')"
+                      className="w-full h-32 rounded-lg border border-gray-300 p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                       {...field}
                     />
                   </FormControl>
@@ -76,12 +75,28 @@ export default function Home() {
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white disabled:bg-blue-300"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
             >
-              {isLoading ? "Sending..." : "Send"}
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <span>Generating...</span>
+                </div>
+              ) : (
+                "Generate"
+              )}
             </button>
           </form>
         </Form>
+
+        {response && (
+          <div className="mt-8 space-y-4">
+            <h2 className="text-xl font-medium text-gray-900">Generated Result:</h2>
+            <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+              <p className="whitespace-pre-wrap text-gray-800">{response}</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
