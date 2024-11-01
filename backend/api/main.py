@@ -34,7 +34,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 async def helth_check():
-    return "The helth check is ok"
+    return "The helth check is fine"
 
 
 @app.post("/api/v1/chat")
