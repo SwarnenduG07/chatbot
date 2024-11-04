@@ -27,7 +27,7 @@ export default function Home() {
     setIsLoading(true);
     setResponse(""); // Clear previous response
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1/chat", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL || "https://chatbot-weld-eight-81.vercel.app/api/v1/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
