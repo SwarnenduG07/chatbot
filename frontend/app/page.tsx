@@ -10,6 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export default function Home() {
   const [response, setResponse] = useState<string>("");
@@ -24,7 +26,7 @@ export default function Home() {
   async function onSubmit(data: { message: string }) {
     setIsLoading(true);
     try {
-      const response = await fetch("https://chatbot-weld-eight-81.vercel.app/api/v1/chat", {
+      const response = await fetch("http://127.0.0.1:8000/api/v1/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,11 +48,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">AI Text Generator </h1>
-          <p className="mt-2 text-gray-600">Enter your prompt below to generate text</p>
+          <h1 className="bg-gradient-to-r from-amber-300 to-rose-300 bg-clip-text text-transparent text-7xl font-thin">AI Text Generator</h1>
+          <p className="mt-2 text-gray-300">Enter your prompt below to generate text</p>
         </div>
 
         <Form {...form}>
@@ -60,7 +62,7 @@ export default function Home() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-lg font-medium text-gray-700">Your Prompt</FormLabel>
+                  <FormLabel className="text-lg font-medium text-zinc-100">Your Prompt</FormLabel>
                   <FormControl>
                     <textarea
                       placeholder="Enter your prompt here... (e.g., 'Write a story about...')"
@@ -75,7 +77,8 @@ export default function Home() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-br from-purple-600 to-fuchsia-400 hover:bg-gradient-to-r hover:from-fuchsia-700 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
+              
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -91,10 +94,10 @@ export default function Home() {
 
         {response && (
           <div className="mt-8 space-y-4">
-            <h2 className="text-xl font-medium text-gray-900">Generated Result:</h2>
-            <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-              <p className="whitespace-pre-wrap text-gray-800">{response}</p>
-            </div>
+            <h2 className="text-xl font-medium text-neutral-100">Generated Result:</h2>
+            <SyntaxHighlighter language="javascript , typescript, java, python, c" style={dracula}>
+              {response}
+            </SyntaxHighlighter>
           </div>
         )}
       </div>

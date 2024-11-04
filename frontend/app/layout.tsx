@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-gradient-to-r from-amber-600 to-neutral-800 ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`bg-gradient-to-bl from-zinc-800 to-neutral-800 ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
