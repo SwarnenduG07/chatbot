@@ -78,6 +78,7 @@ export default function Home() {
               type="submit"
               disabled={isLoading}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-br from-purple-600 to-fuchsia-400 hover:bg-gradient-to-r hover:from-fuchsia-700 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
+              
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
