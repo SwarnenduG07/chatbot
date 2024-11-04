@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 import google.generativeai as genai
 import os
 import logging
@@ -33,18 +34,25 @@ class ChatRequest(BaseModel):
     message: str
 
 @app.get("/")
-async def helth_check():
-    return "The helth check is fine"
-
+async def health_check():
+    return "The health check is fine"
 
 @app.post("/api/v1/chat")
 async def chat(request: ChatRequest):
     logger.info(f"Received message: {request.message}")
+    
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(request.message, )
-        logger.info(f"Generated response: {response.text}")
-        return {"response": response.text}
+        response = model.generate_content(request.message, stream=True)
+        
+        async def text_stream():
+            for chunk in response:
+                chunk_text = chunk.text
+                yield chunk_text + "\n" 
+                logger.info(f"Streamed chunk: {chunk_text}")
+
+        return StreamingResponse(text_stream(), media_type="text/plain")
+    
     except Exception as e:
         logger.error(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

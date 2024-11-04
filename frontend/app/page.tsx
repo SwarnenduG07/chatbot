@@ -25,8 +25,9 @@ export default function Home() {
 
   async function onSubmit(data: { message: string }) {
     setIsLoading(true);
+    setResponse(""); // Clear previous response
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/chat", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,8 +39,19 @@ export default function Home() {
         throw new Error("Failed to fetch response");
       }
 
-      const result = await response.json();
-      setResponse(result.response);
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      // Process streamed text
+      if (reader) {
+        let resultText = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          resultText += decoder.decode(value, { stream: true });
+          setResponse((prev) => prev + resultText); // Append streamed chunk
+        }
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -51,7 +63,9 @@ export default function Home() {
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center">
-          <h1 className="bg-gradient-to-r from-amber-300 to-rose-300 bg-clip-text text-transparent text-7xl font-thin">AI Text Generator</h1>
+          <h1 className="bg-gradient-to-r from-amber-300 to-rose-300 bg-clip-text text-transparent text-7xl font-thin">
+            AI Text Generator
+          </h1>
           <p className="mt-2 text-gray-300">Enter your prompt below to generate text</p>
         </div>
 
@@ -78,7 +92,6 @@ export default function Home() {
               type="submit"
               disabled={isLoading}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-br from-purple-600 to-fuchsia-400 hover:bg-gradient-to-r hover:from-fuchsia-700 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors"
-              
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -95,7 +108,7 @@ export default function Home() {
         {response && (
           <div className="mt-8 space-y-4">
             <h2 className="text-xl font-medium text-neutral-100">Generated Result:</h2>
-            <SyntaxHighlighter language="javascript , typescript, java, python, c" style={dracula}>
+            <SyntaxHighlighter language="javascript, typescript, java, python , c , c++ , plaintext" style={dracula}>
               {response}
             </SyntaxHighlighter>
           </div>
